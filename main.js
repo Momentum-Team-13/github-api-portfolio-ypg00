@@ -1,3 +1,4 @@
+const gProfile = document.getElementById('profile');
 const gitHubUrl = 'https://api.github.com/users/ypg00';
 
 fetch(gitHubUrl, {
@@ -9,18 +10,28 @@ fetch(gitHubUrl, {
     })
     .then(function (data) {
       console.log('You have been successfully subscribed', data)
+      createProfileElement(data);
     });
 
-let key = '';
-const gProfile = document.getElementById('profile');
+function createProfileElement (d) {
+    // Profile Pic
+    let gPic = document.createElement('img');
+    gPic.id = 'pic';
+    gPic.src = d.avatar_url;
+    gProfile.appendChild(gPic);
 
-let gName =  document.createElement('div')
-gName.id = 'name';
-key = 'name';
-gName.innerText = 'yayay'; // call the function with key in bracket notation
-gProfile.appendChild(gName);
+    // Name
+    let gName =  document.createElement('div')
+    gName.id = 'name';
+    gName.innerText = d.name;
+    gProfile.appendChild(gName);
 
+    // Location
 
-function createProfileElement (key) {
-    return data[key];
+    // GitHub URL
+
+    // GitHub Username
+
+    // GitHub Repos
+
 }
