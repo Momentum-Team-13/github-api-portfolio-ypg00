@@ -9,9 +9,18 @@ fetch(gitHubUrl, {
     })
     .then(function (data) {
       console.log('You have been successfully subscribed', data)
-      //call function here
     });
 
-function responseData (data) {
+let key = '';
+const gProfile = document.getElementById('profile');
 
+let gName =  document.createElement('div')
+gName.id = 'name';
+key = 'name';
+gName.innerText = 'yayay'; // call the function with key in bracket notation
+gProfile.appendChild(gName);
+
+
+function createProfileElement (key) {
+    return data[key];
 }
