@@ -4,6 +4,8 @@ const gitHubUserName = 'ypg00';
 const gitHubProfileUrl = `https://api.github.com/users/${gitHubUserName}`;
 const gitHubReposURL = `https://api.github.com/users/${gitHubUserName}/repos`;
 
+let importObjects = ['avatar_url', 'name', 'location', 'html_url', 'login']
+
 createGitHubProfilePage();
 
 // Main function that uses API fetches to create both sections of the GitHub Profile Page
@@ -11,8 +13,8 @@ function createGitHubProfilePage() {
   
   // fetch(GET) request to get GitHub user data
   fetch(gitHubProfileUrl, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
   })
     .then(function (response) {
       return response.json();
@@ -32,7 +34,8 @@ function createGitHubProfilePage() {
     })
     .then(function (repos) {
       console.log(`API fetch was successful. Repos: ${repos}`);
-      createRepos(repos);
+      // createRepos(repos);
+      haza(repos);
     });
 
 }
@@ -74,7 +77,6 @@ function createProfile(data) {
 
 // Creating the Repos section
 function createRepos(repos) {
-
   // GitHub Repos Element
   let reposSection = document.createElement('div');
   reposSection.id = 'repos';
@@ -86,14 +88,40 @@ function createRepos(repos) {
   reposHeader.innerText = 'GitHub Repos';
   reposSection.appendChild(reposHeader);
 
-  // Repos list
-  let reposList = document.createElement('div');
-  reposList.id = 'reposList';
-  let repoString = '';
-  for (i = 0; i < repos.length; i++) {
-    repoString += `<a href=${repos[i].html_url}>${repos[i].name}</a><br>`;
+  // GitHub Repo List
+  for (let i = 0; i < repos.length; i++) {
+    let repoElement = document.createElement('div');
+    repoElement.id = repos[i].name;
+    repoElement.innerHTML = `<a href=${repos[i].html_url}>${repos[i].name}</a>`;
+    reposSection.appendChild(repoElement);
   }
-  reposList.innerHTML = repoString;
-  reposSection.appendChild(reposList);
-
 }
+
+
+
+// An alternative function to create Repo List Section
+// function createRepos(repos) {
+
+//   // GitHub Repos Element
+//   let reposSection = document.createElement('div');
+//   reposSection.id = 'repos';
+//   profile.appendChild(reposSection);
+
+//   // GitHub Repos header
+//   let reposHeader = document.createElement('h2');
+//   reposHeader.id = 'reposHeader';
+//   reposHeader.innerText = 'GitHub Repos';
+//   reposSection.appendChild(reposHeader);
+
+//   // Repos list
+//   let reposList = document.createElement('div');
+//   reposList.id = 'reposList';
+//   let repoString = '';
+//   for (i = 0; i < repos.length; i++) {
+//     repoString += `<a href=${repos[i].html_url}>${repos[i].name}</a><br>`;
+//   }
+//   reposList.innerHTML = repoString;
+//   reposSection.appendChild(reposList);
+//   console.log(`repoString = ${repoString}`);
+
+// }
