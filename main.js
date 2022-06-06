@@ -1,109 +1,99 @@
 // Global Variables
-const gitHubUserName = 'ypg00';
-
 const profile = document.getElementById('profile');
+const gitHubUserName = 'ypg00';
 const gitHubProfileUrl = `https://api.github.com/users/${gitHubUserName}`;
 const gitHubReposURL = `https://api.github.com/users/${gitHubUserName}/repos`;
-let data;
 
-console.log(`gitHubProfileUrl: ${gitHubProfileUrl}`);
-console.log(`gitHubReposUrl: ${gitHubReposURL}`);
+createGitHubProfilePage();
 
-const importObjects = ['avatar_url', 'name', 'location', 'html_url', 'login'];
-console.log(`importObjects: ${importObjects}`);
-
-createGitHubProfilePage(gitHubUserName);
-
-function createGitHubProfilePage(gitHubUserName) {
+// Main function that uses API fetches to create both sections of the GitHub Profile Page
+function createGitHubProfilePage() {
   
-  // fetch(GET) request with GitHub's API
+  // fetch(GET) request to get GitHub user data
   fetch(gitHubProfileUrl, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
   })
-      .then(function (response) {
-        return response.json()
-      })
-      .then(function (data) {
-        console.log(`API fetch was successful. Data: ${data}`);
-        createProfile(data);
-      });
-}
-  // Creating HTML elements
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(`API fetch was successful. Data: ${data}`);
+      createProfile(data);
+    });
+  
+  // fetch(Get) request to get GitHub repo data
+  fetch(gitHubReposURL, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (repos) {
+      console.log(`API fetch was successful. Repos: ${repos}`);
+      createRepos(repos);
+    });
 
-function createProfile (data) {
+}
+
+// Creating the GitHub user profile section
+function createProfile(data) {
 
   // Profile pic
   let pic = document.createElement('img');
-  pic.id = `${importObjects[0]}`;
-  pic.src = data[importObjects[0]];
+  pic.id = 'avatar_url';
+  pic.src = data.avatar_url;
   profile.appendChild(pic);
 
-  // Creating HTML elements (<div>), variables, ids, and appendingChild for the majority of content
-  // createDivs(importObjects.slice(1));
-  console.log(`importObjects.slice(1): ${importObjects.slice(1)}`)
-  console.log(`line 45: data: ${data[importObjects.slice(1)]}`);
+  // Name
+  let name =  document.createElement('div');
+  name.id = 'name';
+  name.innerText = data.name;
+  profile.appendChild(name);
 
-  console.log(`data[importObjects[1]]: ${data[importObjects[1]])}`; 
+  // Location
+  let location = document.createElement('div');
+  location.id = 'location';
+  location.innerHTML = `<strong>Location:</strong> ${data.location}`;
+  profile.appendChild(location);
 
-  for (let d of data[`${importObjects.slice(1)}`]) {
-    console.log(`d: ${d}`);
-    d = document.createElement('div');
-    // d.id = `${importObjects[d]}`;
-    console.log(`id: ${d.id}`);
-    profile.appendChild(importObjects[d]);
-  }
+  // GitHub URL
+  let gitHubURL = document.createElement('div');
+  gitHubURL.id = 'url';
+  gitHubURL.innerHTML = `<strong>GitHub URL:</strong> <a href=${data.html_url}>${data.html_url.slice(8)}</a>`;
+  profile.appendChild(gitHubURL);
 
+  // GitHub Username
+  let userName = document.createElement('div');
+  userName.id = 'userName';
+  userName.innerHTML = `<strong>GitHub Username:</strong> ${data.login}`;
+  profile.appendChild(userName);
 
 }
 
+// Creating the Repos section
+function createRepos(repos) {
 
-// Supporting functions
+  // GitHub Repos Element
+  let reposSection = document.createElement('div');
+  reposSection.id = 'repos';
+  profile.appendChild(reposSection);
 
-// Creating a div element + id + append
+  // GitHub Repos header
+  let reposHeader = document.createElement('h2');
+  reposHeader.id = 'reposHeader';
+  reposHeader.innerText = 'GitHub Repos';
+  reposSection.appendChild(reposHeader);
 
-// function createDivs(keys) {
-//   console.log(`keys: ${keys}`);
-//   for (let key of keys) {
-//     let key = document.createElement('div');
-//     key.id = data[importObjects.slice(1)];  
-//     console.log(`key.id ${key.id}`)
-//     console.log(`key: ${importObject}`);
-//     profile.appendChild(key);
-//   }
-// } 
+  // Repos list
+  let reposList = document.createElement('div');
+  reposList.id = 'reposList';
+  let repoString = '';
+  for (i = 0; i < repos.length; i++) {
+    repoString += `<a href=${repos[i].html_url}>${repos[i].name}</a><br>`;
+  }
+  reposList.innerHTML = repoString;
+  reposSection.appendChild(reposList);
 
-    
-
-    
-// // Profile Pic
-// let pic = document.createElement('img');
-// pic.id = 'pic';
-// pic.src = d.avatar_url;
-// profile.appendChild(pic);
-
-// // Name
-// let name =  document.createElement('div');
-// name.id = 'name';
-// name.innerText = d.name;
-// profile.appendChild(name);
-
-// // Location
-// let gLocation = document.createElement('div');
-// gLocation.id = 'location';
-// gLocation.innerHTML = `<strong>Location:</strong> ${d.location}`;
-// profile.appendChild(gLocation);
-
-// // GitHub URL
-// let gURL = document.createElement('div');
-// gURL.id = 'url';
-// gURL.innerHTML = `<strong>GitHub URL:</strong> <a href=${d.html_url}>${d.html_url.slice(8)}</a>`;
-// profile.appendChild(gURL);
-
-// // GitHub Username
-// let gUserName = document.createElement('div');
-// gUserName.id = 'userName';
-// gUserName.innerHTML = `<strong>GitHub Username:</strong> ${d.login}`;
-// profile.appendChild(gUserName);
-
-  
+}
